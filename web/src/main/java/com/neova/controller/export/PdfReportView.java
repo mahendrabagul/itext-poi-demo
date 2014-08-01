@@ -9,9 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
 import com.lowagie.text.Document;
-import com.lowagie.text.HeaderFooter;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
-import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
 @SuppressWarnings("unchecked")
@@ -28,11 +31,42 @@ public class PdfReportView extends AbstractPdfView {
 		List<UserReportDetails> userList = (List<UserReportDetails>) model
 				.get("userList");
 
-		Table table = new Table(4);
-		table.addCell("User Name");
-		table.addCell("First Name");
-		table.addCell("Last Name");
-		table.addCell("Email");
+		PdfPTable table = new PdfPTable(4);
+
+		table.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+		Paragraph paragraph = new Paragraph("User List");
+		paragraph.setAlignment(Element.ALIGN_CENTER);
+		paragraph.setSpacingAfter(4);
+		document.add(paragraph);
+
+		//
+
+		Phrase phrase = new Phrase("UserName");
+		PdfPCell c1 = new PdfPCell(phrase);
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		table.addCell(c1);
+		phrase.getFont().setStyle(Font.BOLD);
+
+		phrase = new Phrase("FirstName");
+		c1 = new PdfPCell(phrase);
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		table.addCell(c1);
+		phrase.getFont().setStyle(Font.BOLD);
+
+		phrase = new Phrase("LastName");
+		c1 = new PdfPCell(phrase);
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		table.addCell(c1);
+		phrase.getFont().setStyle(Font.BOLD);
+
+		phrase = new Phrase("Email");
+		c1 = new PdfPCell(phrase);
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		table.addCell(c1);
+		phrase.getFont().setStyle(Font.BOLD);
+
+		table.setHeaderRows(1);
 
 		// create data rows
 		for (UserReportDetails user : userList) {
@@ -43,12 +77,8 @@ public class PdfReportView extends AbstractPdfView {
 			table.addCell(user.getEmail());
 
 		}
-		
 		document.add(table);
 		document.addTitle("User List");
-		HeaderFooter headerFooter = new HeaderFooter(new Phrase(
-				"Neova Solutions"), true);
-		document.setHeader(headerFooter);
 
 		// try (OutputStream outStream = response.getOutputStream()) {
 		// workbook.write(outStream);
